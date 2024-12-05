@@ -23,6 +23,12 @@ while True:
         if klik.type == pygame.QUIT:
             pygame.quit()
         if klik.type == pygame.KEYDOWN:
+            if klik.key == pygame.K_w:
+                y -= 20
+            if klik.key == pygame.K_s:
+                y += 20
+            if klik.key == pygame.K_a:
+                x -= 20
             if klik.key == pygame.K_d:
                 x += 20
             if klik.key == pygame.K_ESCAPE:
