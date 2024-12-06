@@ -25,12 +25,15 @@ while True:
     y_fart += 0.001
     x += x_fart
     y += y_fart
+    if y > 300:
+        y_fart = 0
+        y -= 0.001
     for klik in pygame.event.get():
         if klik.type == pygame.QUIT:
             pygame.quit()
         if klik.type == pygame.KEYDOWN:
             if klik.key == pygame.K_SPACE:
-                y_fart -= 1
+                y_fart -= 0.5
 #            if klik.key == pygame.K_s:
 #                y_fart += 20
             if klik.key == pygame.K_a:
