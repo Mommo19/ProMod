@@ -6,44 +6,74 @@ Grønn = (0, 255, 0)
 Rød = (255, 0, 0)
 Sort = (0, 0, 0)
 Hvit = (255, 255, 255)
-x = 200
-y = 200
-x_fart = 0
-y_fart = 0
 
-pygame.init()
-bakgrunnd = pygame.display.set_mode((1000,700))
-pygame.display.set_caption("celeste??")
-bakgrunnd.fill(Hvit)
-pygame.draw.rect(bakgrunnd, Blå, (x, y, 50, 50))
-
-pygame.display.update()
-
-
-while True:
+class spiller_klasse:
+    def __init__(self, x, y, sx, sy, farge, ilufta, x_fart, y_fart):
+        self.x = x
+        self.y = y
+        self.sx = sx
+        self.sy = sy
+        self.farge = farge
+        self.ilufta = ilufta
+        self.x_fart = x_fart
+        self.y_fart = y_fart
     
-    y_fart += 0.001
-    x += x_fart
-    y += y_fart
-    if y > 300:
-        y_fart = 0
-        y -= 0.001
-    for klik in pygame.event.get():
-        if klik.type == pygame.QUIT:
-            pygame.quit()
-        if klik.type == pygame.KEYDOWN:
-            if klik.key == pygame.K_SPACE:
-                y_fart -= 0.5
-#            if klik.key == pygame.K_s:
-#                y_fart += 20
-            if klik.key == pygame.K_a:
-                x_fart -= 1
-            if klik.key == pygame.K_d:
-                x_fart += 1
-            if klik.key == pygame.K_ESCAPE:
-                pygame.quit()
-    bakgrunnd.fill(Hvit)
-    pygame.draw.rect(bakgrunnd, Blå, (x, y, 50, 50))
-    pygame.draw.rect(bakgrunnd, Grønn, (0, 350, 1000, 50))
-    pygame.display.update()
-pygame.quit()
+    def tegn(self, bg):
+        pygame.draw.rect(bg, self.farge, (self.x, self.y, self.sx, self.sy))
+
+    def bevegelse(self):
+        knaper = pygame.key.get_pressed()
+        if knaper [pygame.K_a]:
+            self.x -= 0.5
+        if knaper [pygame.K_d]:
+            self.x += 0.5
+        if knaper  [pygame.K_SPACE] and not self.ilufta:
+            self.y_fart -= 0.5   
+            self.ilufta = True
+
+    def oppdater(self, g):
+        if self.ilufta:
+            self.y_fart += g
+            self.y += self.y_fart
+        if self.y > 300:
+            self.ilufta = False
+            self.y_fart = 0
+        
+
+def spill():
+
+    fortsett = True  
+    g = 0.001  
+
+
+    def tegn_brett():
+        bg.fill(Hvit)
+        pygame.draw.rect(bg, Grønn, (0, 350, 1000, 50))
+        spiller.tegn(bg)
+        pygame.display.update()
+
+
+    pygame.init()
+    bg = pygame.display.set_mode((1000,700))
+    pygame.display.set_caption("celeste??")
+    
+    spiller = spiller_klasse(200, 200, 50, 50, Blå, True, 0, 0)
+
+
+    while fortsett:
+        
+ 
+        for klikk in pygame.event.get():
+            if klikk.type == pygame.QUIT:
+                fortsett = False
+            if klikk.type == pygame.KEYDOWN:
+                if klikk.key == pygame.K_ESCAPE:
+                    fortsett = False
+        
+        spiller.bevegelse()
+        spiller.oppdater(g)
+        tegn_brett()
+    pygame.quit()
+
+
+spill()
