@@ -4,6 +4,7 @@ import pygame
 Blå = (0, 0, 255)
 Grønn = (0, 255, 0)
 Rød = (255, 0, 0)
+Lilla = (150, 0, 220)
 Sort = (0, 0, 0)
 Hvit = (255, 255, 255)
 
@@ -43,7 +44,7 @@ class spiller_klasse:
 def spill():
 
     fortsett = True  
-    g = 0.001  
+    g = 0.001 
 
 
     def tegn_brett():
@@ -57,12 +58,11 @@ def spill():
     bg = pygame.display.set_mode((1000,700))
     pygame.display.set_caption("celeste??")
     
-    spiller = spiller_klasse(200, 200, 50, 50, Blå, True, 0, 0)
+    spiller = spiller_klasse(200, 200, 50, 50, Lilla, True, 0, 0)
 
 
     while fortsett:
         
- 
         for klikk in pygame.event.get():
             if klikk.type == pygame.QUIT:
                 fortsett = False
@@ -73,7 +73,7 @@ def spill():
         spiller.bevegelse()
         spiller.oppdater(g)
         tegn_brett()
-    pygame.quit()
 
+    pygame.quit()
 
 spill()
