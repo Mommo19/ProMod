@@ -40,25 +40,83 @@ class spiller_klasse:
             self.ilufta = False
             self.y_fart = 0
         
+    def test(self):
+        print(self.sx, self.sy)
+
+class rom_klasse:
+    def __init__(self, vegger, fiender, ting, farge, g, start_posx, start_posy):
+        self.vegger = vegger
+        self.fiender = fiender
+        self.ting = ting
+        self. farge = farge
+        self.g = g
+        self.start_posx = start_posx
+        self.start_posy = start_posy
+    
+    def tegn(self, bg):
+        bg.fill(self.farge)
+        for v in self.vegger: v.tegn(bg)
+
+class vegg_klasse:
+    def __init__(self, x, y, sx, sy, type = 0, farge = Blå):
+        self.x = x
+        self.y = y
+        self.sx = sx
+        self.sy = sy
+        self.type = type
+        self.farge = farge
+    
+    def tegn(self, bg):
+        if self.type == 0:
+            pygame.draw.rect(bg, self.farge, (self.x, self.y, self.sx, self.sy))
+        elif self.type == 1:
+            pygame.draw.rect(bg, self.farge, (self.x, self.y, self.sx, self.sy), 8)
+    
+
+def lag_rom():
+   
+    alle_rom = []
+
+    vegger = []
+    vegger.append(vegg_klasse(450, 300, 100, 30))
+    vegger.append(vegg_klasse(600, 300, 100, 30, 1))
+
+    alle_rom.append(rom_klasse(vegger, [], [], Hvit, 0.001, 200, 200))
+
+    vegger = []
+    vegger.append(vegg_klasse(450, 600, 100, 30))
+    vegger.append(vegg_klasse(600, 600, 100, 30, 1))
+
+    alle_rom.append(rom_klasse(vegger, [], [], Rød, 0.0015, 400, 200))
+
+
+    
+    return alle_rom
 
 def spill():
 
     fortsett = True  
-    g = 0.001 
 
+    alle_rom = lag_rom()
 
+    rom_nr = 0
+
+    rom = alle_rom[rom_nr]
+    
     def tegn_brett():
-        bg.fill(Hvit)
+        rom.tegn(bg)
         pygame.draw.rect(bg, Grønn, (0, 350, 1000, 50))
         spiller.tegn(bg)
+        
         pygame.display.update()
+
 
 
     pygame.init()
     bg = pygame.display.set_mode((1000,700))
     pygame.display.set_caption("celeste??")
     
-    spiller = spiller_klasse(200, 200, 50, 50, Lilla, True, 0, 0)
+    spiller = spiller_klasse(rom.start_posx, rom.start_posy, 50, 50, Lilla, True, 0, 0)
 
 
     while fortsett:
@@ -69,9 +127,14 @@ def spill():
             if klikk.type == pygame.KEYDOWN:
                 if klikk.key == pygame.K_ESCAPE:
                     fortsett = False
-        
+                if klikk.key == pygame.K_0:
+                    rom_nr = 0
+                    rom = alle_rom[rom_nr]
+                if klikk.key == pygame.K_1:
+                    rom_nr = 1
+                    rom = alle_rom[rom_nr]
         spiller.bevegelse()
-        spiller.oppdater(g)
+        spiller.oppdater(rom.g)
         tegn_brett()
 
     pygame.quit()
