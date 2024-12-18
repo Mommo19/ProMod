@@ -1,5 +1,5 @@
 
-import pygame
+import pygame  
 
 Blå = (0, 0, 255)
 Grønn = (0, 255, 0)
@@ -32,13 +32,29 @@ class spiller_klasse:
             self.y_fart -= 0.5   
             self.ilufta = True
 
-    def oppdater(self, g):
+    def oppdater(self, rom):
+
+        
         if self.ilufta:
-            self.y_fart += g
+            self.y_fart += rom.g
             self.y += self.y_fart
-        if self.y > 300:
-            self.ilufta = False
-            self.y_fart = 0
+            #tester for landing
+            for v in rom.vegger:
+                if self.x + self.sx > v.x and self.x < v.x + v.sx:
+                    if self.y + self.sy > v.y and self.y + self.sy < v.y + v.sy:
+                        self.ilufta = False
+                        self.y = v.y - self.sy
+                        self.y_fart = 0
+
+        else:
+            på_vegg = False
+            for v in rom.vegger:
+                if self.x + self.sx > v.x and self.x < v.x + v.sx:
+                    if self.y + self.sy + 1 >= v.y:
+                        på_vegg = True
+            if på_vegg == False:
+                self.ilufta = True
+        
         
     def test(self):
         print(self.sx, self.sy)
@@ -78,6 +94,7 @@ def lag_rom():
     alle_rom = []
 
     vegger = []
+    vegger.append(vegg_klasse(0, 400, 500, 50))
     vegger.append(vegg_klasse(450, 300, 100, 30))
     vegger.append(vegg_klasse(600, 300, 100, 30, 1))
 
@@ -105,7 +122,6 @@ def spill():
     
     def tegn_brett():
         rom.tegn(bg)
-        pygame.draw.rect(bg, Grønn, (0, 350, 1000, 50))
         spiller.tegn(bg)
         
         pygame.display.update()
@@ -134,7 +150,7 @@ def spill():
                     rom_nr = 1
                     rom = alle_rom[rom_nr]
         spiller.bevegelse()
-        spiller.oppdater(rom.g)
+        spiller.oppdater(rom)
         tegn_brett()
 
     pygame.quit()
