@@ -8,6 +8,9 @@ Lilla = (150, 0, 220)
 Sort = (0, 0, 0)
 Hvit = (255, 255, 255)
 
+scr_x = 1100
+scr_y = 650
+
 class spiller_klasse:
     def __init__(self, x, y, sx, sy, farge, ilufta, x_fart, y_fart):
         self.x = x
@@ -33,11 +36,26 @@ class spiller_klasse:
             self.ilufta = True
 
     def oppdater(self, rom):
-
         
+        for v in rom.vegger:
+            if (self.y > v.y and self.y < v.y + v.sy) or (self.y + self.sy > v.y and self.y < v.y + v.sy):
+                if self.x + self.sx == v.x:
+                    self.x = v.x - self.sx - 1
+
+        for v in rom.vegger:
+            if (self.y > v.y and self.y < v.y + v.sy) or (self.y + self.sy > v.y and self.y < v.y + v.sy):
+                if self.x == v.x + v.sx:
+                    self.x = v.x + v.sx + 1
+
         if self.ilufta:
             self.y_fart += rom.g
             self.y += self.y_fart
+            #tester for tak
+            for v in rom.vegger:
+                if self.x + self.sx > v.x and self.x < v.x + v.sx:
+                    if self.y > v.y + v.sy - 1 and self.y < v.y + v.sy:
+                        self.y_fart = 0
+                        self.y = v.y + v.sy
             #tester for landing
             for v in rom.vegger:
                 if self.x + self.sx > v.x and self.x < v.x + v.sx:
@@ -45,16 +63,16 @@ class spiller_klasse:
                         self.ilufta = False
                         self.y = v.y - self.sy
                         self.y_fart = 0
-
+        
         else:
             på_vegg = False
             for v in rom.vegger:
                 if self.x + self.sx > v.x and self.x < v.x + v.sx:
-                    if self.y + self.sy + 1 >= v.y:
+                    if self.y + self.sy + 1 == v.y:
                         på_vegg = True
             if på_vegg == False:
                 self.ilufta = True
-        
+             
         
     def test(self):
         print(self.sx, self.sy)
@@ -97,6 +115,8 @@ def lag_rom():
     vegger.append(vegg_klasse(0, 400, 500, 50))
     vegger.append(vegg_klasse(450, 300, 100, 30))
     vegger.append(vegg_klasse(600, 300, 100, 30, 1))
+    vegger.append(vegg_klasse(350, 200, 100, 30))
+    vegger.append(vegg_klasse(700, 100, 100, 700))
 
     alle_rom.append(rom_klasse(vegger, [], [], Hvit, 0.001, 200, 200))
 
@@ -120,6 +140,7 @@ def spill():
 
     rom = alle_rom[rom_nr]
     
+    # sette utafor ??
     def tegn_brett():
         rom.tegn(bg)
         spiller.tegn(bg)
@@ -129,10 +150,10 @@ def spill():
 
 
     pygame.init()
-    bg = pygame.display.set_mode((1000,700))
+    bg = pygame.display.set_mode((scr_x, scr_y))
     pygame.display.set_caption("celeste??")
     
-    spiller = spiller_klasse(rom.start_posx, rom.start_posy, 50, 50, Lilla, True, 0, 0)
+    spiller = spiller_klasse(rom.start_posx, rom.start_posy, 25, 50, Lilla, True, 0, 0)
 
 
     while fortsett:
@@ -156,3 +177,19 @@ def spill():
     pygame.quit()
 
 spill()
+
+
+
+# To Do
+"""
+lage brett
+flere rom
+start meny
+død
+liv??
+FPS
+start/slut i rom
+ting
+finder/pigger
+grafikk
+"""
