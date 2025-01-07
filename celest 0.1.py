@@ -28,38 +28,40 @@ class spiller_klasse:
     def bevegelse(self):
         knaper = pygame.key.get_pressed()
         if knaper [pygame.K_a]:
-            self.x -= 0.5
+            self.x -= 1
         if knaper [pygame.K_d]:
-            self.x += 0.5
+            self.x += 1
         if knaper  [pygame.K_SPACE] and not self.ilufta:
-            self.y_fart -= 0.5   
+            self.y_fart -= 2.5
             self.ilufta = True
 
     def oppdater(self, rom):
         
         for v in rom.vegger:
-            if (self.y > v.y and self.y < v.y + v.sy) or (self.y + self.sy > v.y and self.y < v.y + v.sy):
+            if (self.y > v.y and self.y < v.y + v.sy) or (self.y + self.sy > v.y and self.y < v.y + v.sy) and v.type == 0:
                 if self.x + self.sx == v.x:
                     self.x = v.x - self.sx - 1
 
         for v in rom.vegger:
-            if (self.y > v.y and self.y < v.y + v.sy) or (self.y + self.sy > v.y and self.y < v.y + v.sy):
+            if (self.y > v.y and self.y < v.y + v.sy) or (self.y + self.sy > v.y and self.y < v.y + v.sy) and v.type == 0:
                 if self.x == v.x + v.sx:
                     self.x = v.x + v.sx + 1
 
         if self.ilufta:
             self.y_fart += rom.g
             self.y += self.y_fart
+            
             #tester for tak
             for v in rom.vegger:
                 if self.x + self.sx > v.x and self.x < v.x + v.sx:
-                    if self.y > v.y + v.sy - 1 and self.y < v.y + v.sy:
+                    if self.y > v.y + v.sy - 3 and self.y < v.y + v.sy and v.type == 0:
                         self.y_fart = 0
                         self.y = v.y + v.sy
+            
             #tester for landing
             for v in rom.vegger:
                 if self.x + self.sx > v.x and self.x < v.x + v.sx:
-                    if self.y + self.sy > v.y and self.y + self.sy < v.y + v.sy:
+                    if self.y + self.sy > v.y and self.y + self.sy < v.y + v.sy and self.y_fart >= 0:
                         self.ilufta = False
                         self.y = v.y - self.sy
                         self.y_fart = 0
@@ -114,11 +116,11 @@ def lag_rom():
     vegger = []
     vegger.append(vegg_klasse(0, 400, 500, 50))
     vegger.append(vegg_klasse(450, 300, 100, 30))
-    vegger.append(vegg_klasse(600, 300, 100, 30, 1))
+    vegger.append(vegg_klasse(200, 370, 100, 30, 1))
     vegger.append(vegg_klasse(350, 200, 100, 30))
     vegger.append(vegg_klasse(700, 100, 100, 700))
 
-    alle_rom.append(rom_klasse(vegger, [], [], Hvit, 0.001, 200, 200))
+    alle_rom.append(rom_klasse(vegger, [], [], Hvit, 0.03, 200, 200))
 
     vegger = []
     vegger.append(vegg_klasse(450, 600, 100, 30))
@@ -150,6 +152,10 @@ def spill():
 
 
     pygame.init()
+
+    clock = pygame.time.Clock()
+    fps = 200
+
     bg = pygame.display.set_mode((scr_x, scr_y))
     pygame.display.set_caption("celeste??")
     
@@ -174,6 +180,8 @@ def spill():
         spiller.oppdater(rom)
         tegn_brett()
 
+        clock.tick(fps)
+
     pygame.quit()
 
 spill()
@@ -187,7 +195,6 @@ flere rom
 start meny
 død
 liv??
-FPS
 start/slut i rom
 ting
 finder/pigger
