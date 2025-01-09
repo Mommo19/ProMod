@@ -65,7 +65,7 @@ class spiller_klasse:
                         self.ilufta = False
                         self.y = v.y - self.sy
                         self.y_fart = 0
-        
+
         else:
             på_vegg = False
             for v in rom.vegger:
@@ -74,13 +74,22 @@ class spiller_klasse:
                         på_vegg = True
             if på_vegg == False:
                 self.ilufta = True
+        
+        if self.y > scr_y:
+            self.x = rom.start_posx
+            self.y = rom.start_posy
+            self.y_fart = 0
              
+        #if self.x > rom.slutt_posx:
+            #if self.y < rom.slutt_posy + 50 and self.y > rom.slutt_posy - 50:
+                #rom_nr += 1
+                #rom = alle_rom[rom_nr]
         
     def test(self):
         print(self.sx, self.sy)
 
 class rom_klasse:
-    def __init__(self, vegger, fiender, ting, farge, g, start_posx, start_posy):
+    def __init__(self, vegger, fiender, ting, farge, g, start_posx, start_posy, slutt_posx, slutt_posy):
         self.vegger = vegger
         self.fiender = fiender
         self.ting = ting
@@ -88,6 +97,8 @@ class rom_klasse:
         self.g = g
         self.start_posx = start_posx
         self.start_posy = start_posy
+        self.slutt_posx = slutt_posx
+        self.slutt_posy = slutt_posy
     
     def tegn(self, bg):
         bg.fill(self.farge)
@@ -114,19 +125,22 @@ def lag_rom():
     alle_rom = []
 
     vegger = []
-    vegger.append(vegg_klasse(0, 400, 500, 50))
+    vegger. append(vegg_klasse(0, 0, 50, scr_y))
+    vegger.append(vegg_klasse(0, 0, scr_x, 50))
+    vegger.append(vegg_klasse(scr_x - 50, 150, 50, scr_y - 150))
+    vegger.append(vegg_klasse(0, scr_y - 50, 500, 50))
     vegger.append(vegg_klasse(450, 300, 100, 30))
     vegger.append(vegg_klasse(200, 370, 100, 30, 1))
     vegger.append(vegg_klasse(350, 200, 100, 30))
-    vegger.append(vegg_klasse(700, 100, 100, 700))
+    
 
-    alle_rom.append(rom_klasse(vegger, [], [], Hvit, 0.03, 200, 200))
+    alle_rom.append(rom_klasse(vegger, [], [], Hvit, 0.03, 100, 200, 500, 350))
 
     vegger = []
     vegger.append(vegg_klasse(450, 600, 100, 30))
     vegger.append(vegg_klasse(600, 600, 100, 30, 1))
 
-    alle_rom.append(rom_klasse(vegger, [], [], Rød, 0.0015, 400, 200))
+    alle_rom.append(rom_klasse(vegger, [], [], Rød, 0.03, 400, 200, scr_x, 100))
 
 
     
@@ -192,11 +206,15 @@ spill()
 """
 lage brett
 flere rom
-start meny
-død
-liv??
-start/slut i rom
-ting
+start/slut i rom!!
 finder/pigger
-grafikk
+"""
+
+#to do later
+"""
+liv??
+moren til jakob
+ting
+start meny
+grafik
 """
