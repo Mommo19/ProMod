@@ -17,26 +17,29 @@ class spiller_klasse:
         self.y = y
         self.sx = sx
         self.sy = sy
+        self.rect = pygame.Rect(x, y, sx, sy)
         self.farge = farge
         self.ilufta = ilufta
         self.x_fart = x_fart
         self.y_fart = y_fart
     
     def tegn(self, bg):
-        pygame.draw.rect(bg, self.farge, (self.x, self.y, self.sx, self.sy))
+        pygame.draw.rect(bg, self.farge, self.rect)
 
     def bevegelse(self):
-        knaper = pygame.key.get_pressed()
-        if knaper [pygame.K_a]:
+        knapper = pygame.key.get_pressed()
+        if knapper[pygame.K_a] or knapper[pygame.K_LEFT]:
             self.x -= 1
-        if knaper [pygame.K_d]:
+        if knapper[pygame.K_d] or knapper[pygame.K_RIGHT]:
             self.x += 1
-        if knaper  [pygame.K_SPACE] and not self.ilufta:
+        if knapper[pygame.K_SPACE] and not self.ilufta:
             self.y_fart -= 2.5
             self.ilufta = True
 
     def oppdater(self, rom):
         
+        ferdig = False
+
         for v in rom.vegger:
             if (self.y > v.y and self.y < v.y + v.sy) or (self.y + self.sy > v.y and self.y < v.y + v.sy) and v.type == 0:
                 if self.x + self.sx == v.x:
@@ -80,18 +83,27 @@ class spiller_klasse:
             self.y = rom.start_posy
             self.y_fart = 0
              
-        #if self.x > rom.slutt_posx:
-            #if self.y < rom.slutt_posy + 50 and self.y > rom.slutt_posy - 50:
-                #rom_nr += 1
-                #rom = alle_rom[rom_nr]
+        if self.x > rom.slutt_posx:
+            if self.y < rom.slutt_posy + 50 and self.y > rom.slutt_posy - 50:
+                ferdig = True
+
+        for h in rom.hinder:
+            if self.rect.colliderect(h.rect):
+                self.x = rom.start_posx
+                self.y = rom.start_posy
+                self.y_fart = 0
+
+        self.rect = pygame.Rect(self.x, self.y, self.sx, self.sy)
+
+        return ferdig
         
     def test(self):
         print(self.sx, self.sy)
 
 class rom_klasse:
-    def __init__(self, vegger, fiender, ting, farge, g, start_posx, start_posy, slutt_posx, slutt_posy):
+    def __init__(self, vegger, hinder, ting, farge, g, start_posx, start_posy, slutt_posx, slutt_posy):
         self.vegger = vegger
-        self.fiender = fiender
+        self.hinder = hinder
         self.ting = ting
         self. farge = farge
         self.g = g
@@ -103,6 +115,7 @@ class rom_klasse:
     def tegn(self, bg):
         bg.fill(self.farge)
         for v in self.vegger: v.tegn(bg)
+        for h in self.hinder: h.tegn(bg)
 
 class vegg_klasse:
     def __init__(self, x, y, sx, sy, type = 0, farge = Blå):
@@ -118,6 +131,18 @@ class vegg_klasse:
             pygame.draw.rect(bg, self.farge, (self.x, self.y, self.sx, self.sy))
         elif self.type == 1:
             pygame.draw.rect(bg, self.farge, (self.x, self.y, self.sx, self.sy), 8)
+
+class hinder_klasse:
+    def __init__(self, x, y, sx, sy, farge = Rød):
+        self.x = x
+        self.y = y
+        self.sx = sx
+        self.sy = sy
+        self.rect = pygame.Rect(x, y, sx, sy)
+        self.farge = farge
+
+    def tegn(self, bg):
+        pygame.draw.rect(bg, self.farge, self.rect)
     
 
 def lag_rom():
@@ -141,20 +166,23 @@ def lag_rom():
     vegger.append(vegg_klasse(250, 250, 80, 30))
     vegger.append(vegg_klasse(250, 150, 100, 30, 1))
 
-    
+    hinder = []
+    hinder.append(hinder_klasse(400, 300, 50, 50))
 
-    alle_rom.append(rom_klasse(vegger, [], [], Hvit, 0.03, 100, scr_y - 100, 500, 350))
+    alle_rom.append(rom_klasse(vegger, hinder, [], Hvit, 0.03, 100, scr_y - 100, scr_x, 150))
+
 
     vegger = []
     vegger.append(vegg_klasse(0, scr_y - 50, scr_x, 50))
     vegger.append(vegg_klasse((scr_x/2)-25, 0, 50, scr_y - 150))
     vegger.append(vegg_klasse(600, 600, 100, 30, 1))
 
-    alle_rom.append(rom_klasse(vegger, [], [], Rød, 0.03, 0, 100, scr_x, 100))
+    alle_rom.append(rom_klasse(vegger, [], [], Hvit, 0.03, 0, 100, scr_x, 100))
 
 
     
     return alle_rom
+
 
 def spill():
 
@@ -172,8 +200,6 @@ def spill():
         spiller.tegn(bg)
         
         pygame.display.update()
-
-
 
     pygame.init()
 
@@ -200,8 +226,15 @@ def spill():
                 if klikk.key == pygame.K_1:
                     rom_nr = 1
                     rom = alle_rom[rom_nr]
+        
         spiller.bevegelse()
-        spiller.oppdater(rom)
+        ferdig = spiller.oppdater(rom)
+        if ferdig:
+            rom_nr += 1
+            rom = alle_rom[rom_nr]
+            spiller.x = rom.start_posx
+            spiller.y = rom.start_posy
+            spiller.y_fart = 0
         tegn_brett()
 
         clock.tick(fps)
@@ -216,8 +249,6 @@ spill()
 """
 lage brett
 flere rom
-!start/slut i rom!
-finder/pigger
 """
 
 #to do later
@@ -226,5 +257,5 @@ liv??
 moren til jakob
 ting
 start meny
-grafik
+grafikk
 """
