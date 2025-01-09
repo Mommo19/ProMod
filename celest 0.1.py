@@ -125,16 +125,25 @@ def lag_rom():
     alle_rom = []
 
     vegger = []
-    vegger. append(vegg_klasse(0, 0, 50, scr_y))
+    vegger.append(vegg_klasse(0, 0, 50, scr_y))
     vegger.append(vegg_klasse(0, 0, scr_x, 50))
     vegger.append(vegg_klasse(scr_x - 50, 150, 50, scr_y - 150))
+    vegger.append(vegg_klasse(0, 150, 250, 30))
+    vegger.append(vegg_klasse(350, 150, scr_x - 350, 30))
     vegger.append(vegg_klasse(0, scr_y - 50, 500, 50))
-    vegger.append(vegg_klasse(450, 300, 100, 30))
-    vegger.append(vegg_klasse(200, 370, 100, 30, 1))
-    vegger.append(vegg_klasse(350, 200, 100, 30))
+    vegger.append(vegg_klasse(450, 500, 100, 30))
+    vegger.append(vegg_klasse(650, 450, 100, 30))
+    vegger.append(vegg_klasse(900, 450, 100, 30))
+    vegger.append(vegg_klasse(950, 350, 100, 30))
+    vegger.append(vegg_klasse(750, 270, 100, 30))
+    vegger.append(vegg_klasse(570, 320, 100, 30))
+    vegger.append(vegg_klasse(370, 300, 100, 30))
+    vegger.append(vegg_klasse(250, 250, 80, 30))
+    vegger.append(vegg_klasse(250, 150, 100, 30, 1))
+
     
 
-    alle_rom.append(rom_klasse(vegger, [], [], Hvit, 0.03, 100, 200, 500, 350))
+    alle_rom.append(rom_klasse(vegger, [], [], Hvit, 0.03, 100, scr_y - 100, 500, 350))
 
     vegger = []
     vegger.append(vegg_klasse(450, 600, 100, 30))
@@ -206,7 +215,7 @@ spill()
 """
 lage brett
 flere rom
-start/slut i rom!!
+!start/slut i rom!
 finder/pigger
 """
 
