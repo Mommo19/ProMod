@@ -146,10 +146,11 @@ def lag_rom():
     alle_rom.append(rom_klasse(vegger, [], [], Hvit, 0.03, 100, scr_y - 100, 500, 350))
 
     vegger = []
-    vegger.append(vegg_klasse(450, 600, 100, 30))
+    vegger.append(vegg_klasse(0, scr_y - 50, scr_x, 50))
+    vegger.append(vegg_klasse((scr_x/2)-25, 0, 50, scr_y - 150))
     vegger.append(vegg_klasse(600, 600, 100, 30, 1))
 
-    alle_rom.append(rom_klasse(vegger, [], [], Rød, 0.03, 400, 200, scr_x, 100))
+    alle_rom.append(rom_klasse(vegger, [], [], Rød, 0.03, 0, 100, scr_x, 100))
 
 
     
